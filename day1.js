@@ -1,283 +1,58 @@
-let input = [
-  1895,
-1732,
-1660,
-1658,
-1878,
-367,
-2010,
-1989,
-431,
-1946,
-1614,
-2003,
-945,
-1856,
-1934,
-1937,
-1781,
-1947,
-1991,
-1917,
-1604,
-1707,
-1966,
-1959,
-1182,
-1828,
-1880,
-1908,
-1942,
-1687,
-1611,
-1922,
-1913,
-1803,
-1976,
-1718,
-1885,
-1971,
-2000,
-1912,
-1981,
-1776,
-1901,
-1941,
-1935,
-1977,
-1907,
-1893,
-1898,
-1975,
-2001,
-1833,
-1951,
-1939,
-1988,
-1870,
-1985,
-1932,
-1930,
-1938,
-1926,
-1931,
-1982,
-76,
-1979,
-657,
-1872,
-1933,
-1961,
-1987,
-1998,
-1994,
-418,
-1914,
-1929,
-1810,
-2009,
-1712,
-830,
-1990,
-1900,
-1876,
-1753,
-1859,
-1965,
-1963,
-1905,
-1921,
-1685,
-1694,
-697,
-1899,
-1997,
-1964,
-1927,
-1952,
-1894,
-1960,
-1986,
-1883,
-1616,
-1993,
-1892,
-1943,
-2005,
-1995,
-1915,
-1663,
-1954,
-1902,
-1191,
-1948,
-1875,
-1850,
-1955,
-1962,
-1984,
-1957,
-1969,
-1887,
-1953,
-1786,
-1638,
-1909,
-1881,
-603,
-1973,
-1784,
-1869,
-1925,
-1968,
-1737,
-1807,
-1950,
-1992,
-1936,
-1918,
-1891,
-1897,
-1940,
-1919,
-1910,
-1862,
-1958,
-1832,
-1904,
-1791,
-1920,
-1874,
-1729,
-1643,
-2007,
-1871,
-1999,
-1584,
-1890,
-1924,
-1974,
-1701,
-1906,
-143,
-1725,
-1945,
-1783,
-1873,
-1903,
-167,
-1855,
-1633,
-1956,
-1996,
-1808,
-1884,
-1916,
-829,
-2002,
-1852,
-1835,
-1889,
-1983,
-1949,
-1970,
-1774,
-1764,
-1609,
-1882,
-1857,
-2004,
-1911,
-1896,
-1980,
-2006,
-1967,
-2008,
-1972,
-1648,
-1923,
-1978,
-1675,
-1831,
+const sampleInput = [
+  1721,
+  979,
+  366,
+  299,
+  675,
+  1456,
 ]
 
-let set1 = new Set(); //a+b
-let set2 = new Set(); //b
-let set3 = new Set();
+const fs = require('fs');
+const input = fs.readFileSync('day1.txt', {encoding: 'utf-8'}).split('\n').filter(x => x).map(x => parseInt(x));
 
+//part 1
 
-for(let i = 0; i < input.length; i++) {
-
-  if(set2.has(input[i])) {
-    
-    var ab = 2020-input[i];
-
-
-    
-    
-    for(item of set3) {
-      if(set3.has(ab - item)) {
-        console.log(input[i] * item * (ab - item));
-        return input[i] * item * (ab - item);
-      }
-    }
-    
-  }
-  for(item of set1) {
-    set2.add(item - input[i]);
-  }
-  set1.add(2020-input[i]);
-  
-  set3.add(input[i]);
-}
-
-
-
-
-for(let i = 0; i < input.length; i++ ) {
-  if(set2.has(input[i])) {
-    let int1 = input[i];
-    let int2 = 2020 - input[i];
-    let ab = 2020 - input[i];
-    for(let item of set3) {
-      if(set3.has(ab - item)) {
-        console.log(input[i] * item * ab - item);
-        console.log(input[i]);
-        console.log(ab);
-        console.log(ab - input[i]);
-        return input[i] * item * ab - item;
-      }
-    }
-    // return int1 * int2; 
+const set2020 = new Set();
+const twoSum = [];
+//we loop through each line of the input and store the year into a set
+//we then check if the set already has the number we are looking for by subtracting and checking 2020 - year
+//once we find the two numbers that equal 2020 we push it to an array and multiply to find the answer
+for(const year of input) {
+  if(set2020.has(2020 - year)) {
+    twoSum.push(year, (2020 - year));
   } else {
-    set.add(2020 - input[i]);
-    set3.add(input[i]);
-    for(let item of set) {
-      let x = item - input[i];
-      set2.add(x);
+    set2020.add(year);
+  }
+}
+
+console.log(twoSum);
+console.log(twoSum[0] * twoSum[1]);
+
+//part 2
+//for the 2nd approach, we reach the classic 3sum algorithm question where we need to first sort the input 
+//and then taking in one number we loop through the rest of the input with two pointers
+//since we know all the inputs are unique we can return the first sum that equals 2020
+
+input.sort(function(a,b) {return a - b});
+const threeSum = [];
+
+for(let i = 0; i < input.length - 2; i++) {
+  let j = i + 1;
+  let k = input.length - 1;
+  if(i > 0 && input[i] === input[i-1]) continue
+  while(j < k) {
+    let sum = input[i] + input[j] + input[k];
+    console.log(input[i], input[j], input[k]);
+    if(sum === 2020) {
+      threeSum.push(input[i], input[j], input[k]);
+      break;
+    } else if (sum < 2020) {
+      j++;
+    } else {
+      k--;
     }
   }
 }
-for(let i = 0; i < input.length; i++ ) {
-  if(set2.has(input[i])) {
-    let int1 = input[i];
-    let int2 = 2020 - input[i];
-    let ab = 2020 - input[i];
-    for(let item of set) {
-      if(set2.has(ab - input[i])) {
-        console.log(input[i] * item * ab - item);
-        console.log(input[i]);
-        console.log(ab);
-        console.log(ab - input[i]);
-        return input[i] * item * ab - item;
-      }
-    }
-    // return int1 * int2; 
-  } else {
-    set.add(2020 - input[i]);
-    for(let item of set) {
-      let x = item - input[i];
-      set2.add(x);
-    }
-  }
-}
+
+console.log(threeSum);
+console.log(threeSum[0] * threeSum[1] * threeSum[2]);
